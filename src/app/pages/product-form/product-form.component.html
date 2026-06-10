@@ -1,0 +1,60 @@
+<h2>{{ isEdit ? 'Edit Produk' : 'Tambah Produk' }}</h2>
+
+<p *ngIf="loading" class="muted">Memuat…</p>
+<p *ngIf="error" class="error">{{ error }}</p>
+
+<form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()" class="form">
+  <label>
+    Judul
+    <input type="text" formControlName="title" />
+    <small class="error" *ngIf="form.controls.title.touched && form.controls.title.invalid">
+      Judul wajib diisi (min. 2 karakter).
+    </small>
+  </label>
+
+  <label>
+    Deskripsi
+    <textarea formControlName="description" rows="3"></textarea>
+    <small class="error" *ngIf="form.controls.description.touched && form.controls.description.invalid">
+      Deskripsi wajib diisi.
+    </small>
+  </label>
+
+  <label>
+    Harga (USD)
+    <input type="number" formControlName="price" />
+    <small class="error" *ngIf="form.controls.price.touched && form.controls.price.invalid">
+      Harga harus angka ≥ 0.
+    </small>
+  </label>
+
+  <label>
+    Kategori
+    <select formControlName="categoryId">
+      <option [ngValue]="null" disabled>— Pilih kategori —</option>
+      <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+    </select>
+    <small class="error" *ngIf="form.controls.categoryId.touched && form.controls.categoryId.invalid">
+      Kategori wajib dipilih.
+    </small>
+  </label>
+
+  <label>
+    URL Gambar
+    <input type="text" formControlName="image" placeholder="https://…" />
+    <small class="error" *ngIf="form.controls.image.touched && form.controls.image.invalid">
+      Masukkan URL gambar yang valid (http/https).
+    </small>
+  </label>
+
+  <div class="preview" *ngIf="form.controls.image.valid && form.controls.image.value">
+    <img [src]="form.controls.image.value" alt="Pratinjau" />
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="btn btn-primary" [disabled]="saving">
+      {{ saving ? 'Menyimpan…' : 'Simpan' }}
+    </button>
+    <a routerLink="/products" class="btn">Batal</a>
+  </div>
+</form>

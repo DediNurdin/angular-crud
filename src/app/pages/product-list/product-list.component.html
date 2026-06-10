@@ -1,0 +1,32 @@
+<div class="toolbar">
+  <div>
+    <h2>Katalog Produk</h2>
+    <p class="muted" *ngIf="!loading && products.length">{{ products.length }} produk tersedia</p>
+  </div>
+  <a routerLink="/products/new" class="btn btn-primary">+ Tambah Produk</a>
+</div>
+
+<p *ngIf="loading" class="muted">Memuat…</p>
+<p *ngIf="error" class="error">{{ error }}</p>
+
+<div *ngIf="!loading && products.length" class="catalog">
+  <article *ngFor="let p of products" class="card">
+    <a [routerLink]="['/products', p.id, 'edit']" class="card-media">
+      <img [src]="imageOf(p)" [alt]="p.title" (error)="onImgError($event)" loading="lazy" />
+      <span class="badge" *ngIf="p.category">{{ p.category.name }}</span>
+    </a>
+    <div class="card-body">
+      <h3 class="card-title" [title]="p.title">{{ p.title }}</h3>
+      <p class="card-desc">{{ p.description }}</p>
+      <div class="card-footer">
+        <span class="price">{{ p.price | currency: 'USD' }}</span>
+        <div class="actions">
+          <a [routerLink]="['/products', p.id, 'edit']" class="btn btn-sm">Edit</a>
+          <button class="btn btn-sm btn-danger" (click)="remove(p, $event)">Hapus</button>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+
+<p *ngIf="!loading && !products.length && !error" class="muted">Belum ada produk.</p>
